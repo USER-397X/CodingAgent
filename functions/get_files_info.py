@@ -1,26 +1,34 @@
-import os
+from pathlib import Path
+from google.genai import types # type: ignore 
 
+def get_files_info(working_directory, directory="."):
+    workdir = Path(working_directory).resolve()
+    target_dir = (workdir / (directory)).resolve()
 
-def get_files_info(working_directory, directory = "."):
-    abs_working_dir = os.path.abspath(working_directory)
-    abs_directory = str()
+    # Security check: must stay inside workdir
+    if workdir not in target_dir.parents and target_dir != workdir:
+        return f'Error: Directory "{directory}" not within working directory "{working_directory}".'
 
-    if directory is None:
-        abs_directory = os.path.abspath(working_directory)
-    else:    
-        abs_directory = os.path.abspath(os.path.join(working_directory,directory))
+    try:
+        contents = []
+        for item in target_dir.iterdir():
+            contents.append(
+                f"- {item.name}: filesize {item.stat().st_size} bytes, is directory: {item.is_dir()}"
+            )
+        return "\n".join(contents)
+    except Exception as e:
+        return f"Error: {e}"
 
-    if not abs_directory.startswith(abs_working_dir):
-        return f'Error: Directory {directory} not within working directory {working_directory}.'
-    
-    contents = os.listdir(abs_directory)
-    final_response = str()
-
-    for content in contents:
-        content_path = os.path.join(abs_directory, content)
-        is_dir  = os.path.isdir(content_path)
-        size = os.path.getsize(content_path)
-        final_response += f"- {content}: filesize {size} bytes, is directory: {is_dir}\n"
-
-    return final_response
-        
+schema_get_files_info = types.FunctionDeclaration(
+    name="get_files_info",
+    description="Lists files in the specified directory along with their sizes, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
+            ),
+        },
+    ),
+)
