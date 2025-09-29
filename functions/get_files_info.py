@@ -1,13 +1,13 @@
 from pathlib import Path
 from google.genai import types # type: ignore 
 
-def get_files_info(working_directory, directory="."):
-    workdir = Path(working_directory).resolve()
+def get_files_info(work_dir, directory="."):
+    workdir = Path(work_dir).resolve()
     target_dir = (workdir / (directory)).resolve()
 
     # Security check: must stay inside workdir
     if workdir not in target_dir.parents and target_dir != workdir:
-        return f'Error: Directory "{directory}" not within working directory "{working_directory}".'
+        return f'Error: Directory "{directory}" not within working directory "{work_dir}".'
 
     try:
         contents = []

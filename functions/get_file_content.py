@@ -3,13 +3,13 @@ from google.genai import types # type: ignore
 
 
 
-def get_file_content(working_dir: str, file_path: str, max_chars: int):
-    workdir = Path(working_dir).resolve()
+def get_file_content(work_dir: str, file_path: str, max_chars: int):
+    workdir = Path(work_dir).resolve()
     target = (workdir / file_path).resolve()
 
     # Security check: must stay inside working dir
     if workdir not in target.parents and target != workdir:
-        return f'Error: File "{file_path}" not within working directory "{working_dir}".'
+        return f'Error: File "{file_path}" not within working directory "{work_dir}".'
 
     # Check if target is an existing file
     if not target.is_file():

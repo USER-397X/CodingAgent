@@ -32,7 +32,7 @@ def write_file(work_dir = None, file_path = "default.txt", content = "loremipsum
 
 schema_write_file = types.FunctionDeclaration(
     name="write_file",
-    description="Writes a plain text file to the specified file and if it doesn't exist it will create the file. All files must end on .txt",
+    description="Writes a text file to the specified file and if it doesn't exist it will create the file. All files must have a valid file extension",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={

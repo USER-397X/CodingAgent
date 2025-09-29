@@ -4,12 +4,7 @@ from dotenv import load_dotenv # type: ignore
 from google import genai
 from google.genai import types # type: ignore
 
-from functions.get_files_info import schema_get_files_info
-from functions.get_file_content import schema_get_file_content
-from functions.write_file import schema_write_file
-from functions.run_python_file import schema_run_python_file
 from call_function import call_function, available_functions
-
 from prompts import system_prompt
 
 
@@ -34,7 +29,7 @@ def main():
     client = genai.Client(api_key=api_key)
 
     user_prompt = " ".join(args)
-
+                                        
     if verbose:
         print(f"User prompt: {user_prompt}\n")
 
